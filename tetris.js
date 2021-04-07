@@ -5,14 +5,21 @@
 // ============== Point =======================
 
 function Point (x, y) {
+	
 	this.x = x;
 	this.y = y;    
 }
 
+
 // ============== Rectangle ====================
-function Rectangle() {}
+function Rectangle(p1,p2) {
+
+	this.init.apply(this, arguments);
+}
+
 
 Rectangle.prototype.init = function(p1,p2) {
+
 	this.px = p1.x;
 	this.py = p1.y;
 	this.width = p2.x - p1.x;
@@ -21,6 +28,7 @@ Rectangle.prototype.init = function(p1,p2) {
 	this.color = 'black';
 }
 
+
 Rectangle.prototype.draw = function() {
 
 	// TU CÓDIGO AQUÍ:
@@ -28,6 +36,15 @@ Rectangle.prototype.draw = function() {
 	// la anchura y altura actual y una línea de anchura=lineWidth. Ten en cuenta que 
 	// en este ejemplo la variable ctx es global y que guarda el contexto (context) 
 	// para pintar en el canvas.
+
+	var canvas = document.getElementById('canvas');
+  	if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+	ctx.fillStyle = this.color;
+    ctx.fillRect(this.px*this.width,this.py*this.height,this.width, this.height);
+	ctx.strokeRect(this.px*this.width,this.py*this.height,this.width, this.height)
+
+	}
 }
 
 
@@ -47,14 +64,15 @@ function Block (pos, color) {
 	// Sería interesante que emplearas las constantes Block.BLOCK_SIZE y Block.OUTLINE_WIDTH,
 	// para establecer la anchura del bloque y la anchura de la línea.
 
+	this.BLOCK_SIZE = 30;
+	this.OUTLINE_WIDTH = 2;
+	Rectangle.call(this,pos, new Point(pos.x+this.BLOCK_SIZE,pos.y+this.BLOCK_SIZE));
+	this.color = color;
 }
-
 
 
 Block.BLOCK_SIZE = 30;
 Block.OUTLINE_WIDTH = 2;
 
 // TU CÓDIGO: emplea el patrón de herencia (Block es un Rectangle)
-
-
-
+Block.prototype = Object.create(Rectangle.prototype);
