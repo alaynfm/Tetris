@@ -39,8 +39,8 @@ Rectangle.prototype.draw = function() {
   	if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
 	ctx.fillStyle = this.color;
-    ctx.fillRect(this.px*this.width,this.py*this.height,this.width, this.height);
-	ctx.strokeRect(this.px*this.width,this.py*this.height,this.width, this.height)
+    ctx.fillRect(this.px ,this.py,this.width, this.height);
+	ctx.strokeRect(this.px,this.py,this.width, this.height)
 
 	}
 }
@@ -64,8 +64,8 @@ function Block (pos, color) {
 
 	this.BLOCK_SIZE = 30;
 	this.OUTLINE_WIDTH = 2;
-	Rectangle.prototype.init.call(this,pos, new Point(pos.x+this.BLOCK_SIZE,pos.y+this.BLOCK_SIZE));
-	this.color = color;
+	tamano = this.BLOCK_SIZE + this.OUTLINE_WIDTH;
+	Rectangle.prototype.init.call(this,new Point(pos.x * this.BLOCK_SIZE, pos.y*this.BLOCK_SIZE), new Point((pos.x +1)* this.BLOCK_SIZE,(pos.y + 1)*this.BLOCK_SIZE));	this.color = color;
 }
 
 
@@ -107,7 +107,6 @@ Shape.prototype.draw = function() {
 
 	//llama al array de bloques y lo pinta uno a uno
 	for (var i = 0; i < this.myBlocks.length; i++) {
-		console.log(this.myBlocks[i])
 		this.myBlocks[i].draw();
 		
 	 }
@@ -224,72 +223,3 @@ function Z_Shape(center) {
 
 // TU CÓDIGO AQUÍ: La clase Z_Shape hereda de la clase Shape
 Z_Shape.prototype = Object.create(Shape.prototype);
-
-
-
-// ************************************
-// *     EJERCICIO 3               *
-// ************************************
-
-// ====================== BOARD ================
-
-function Board(width, height) {
-	this.width = width;
-	this.height = height;
-}
-
-// Si la pieza nueva puede entrar en el tablero, pintarla y devolver true.
-// Si no, devoler false
-
-Board.prototype.draw_shape = function(shape){
-	if (this.can_move(this,0,0)){
-		shape.draw();
-		return true;
-	}
-	return false;
-}
-
-
-// En esta parte de la práctica devolveremos siempre 'true'
-// pero, más adelante, tendremos que implementar este método
-// que toma como parámetro la posición (x,y) de una casilla
-// (a la que queremos mover una pieza) e indica si es posible
-// ese movimiento o no (porque ya está ocupada o porque se sale
-// de los límites del tablero)
-
-Board.prototype.can_move = function(x,y){
-	return true;
-}
-
-// ==================== Tetris ==========================
-
-function Tetris() {
-	this.board = new Board(Tetris.BOARD_WIDTH, Tetris.BOARD_HEIGHT);
-}
-
-Tetris.SHAPES = [I_Shape, J_Shape, L_Shape, O_Shape, S_Shape, T_Shape, Z_Shape];
-Tetris.DIRECTION = {'Left':[-1, 0], 'Right':[1, 0], 'Down':[0, 1]};
-Tetris.BOARD_WIDTH = 10;
-Tetris.BOARD_HEIGHT = 20;
-Tetris.BOARD_COLOR='ivory';
-
-Tetris.prototype.create_new_shape = function(){
-
-	// TU CÓDIGO AQUÍ: 
-	// Elegir un nombre de pieza al azar del array Tetris.SHAPES
-	// Crear una instancia de ese tipo de pieza (x = centro del tablero, y = 0)
-	// Devolver la referencia de esa pieza nueva
-	return new Tetris.SHAPES[0](new Point(3,1));
-}
-
-Tetris.prototype.init = function(){
-
-	// Obtener una nueva pieza al azar y asignarla como pieza actual
-
-	this.current_shape = this.create_new_shape();
-	// TU CÓDIGO AQUÍ: 
-	// Pintar la pieza actual en el tablero
-	// Aclaración: (Board tiene un método para pintar)
-	this.board.draw_shape(this.current_shape);
-
-}
