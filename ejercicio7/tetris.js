@@ -110,8 +110,8 @@ Block.prototype.can_move = function(board, dx, dy) {
   // e indica si es posible mover el bloque actual si 
  // incrementáramos su posición en ese valor
 
- pintar = true;
-	 if(board.can_move(dx,dy)){
+ 	pintar = true;
+	if(board.can_move(dx,dy)){
 		if(dy > board.height * (Block.BLOCK_SIZE) - Block.BLOCK_SIZE){
 			pintar = false;
 		}
@@ -148,7 +148,6 @@ Shape.prototype.draw = function() {
 
 	// TU CÓDIGO AQUÍ: método que debe pintar en pantalla todos los bloques
 	// que forman la Pieza
-	console.log(this.myBlocks)
 	for (var i = 0; i < this.myBlocks.length; i++) {
 		this.myBlocks[i].draw();
 		
@@ -344,7 +343,7 @@ Board.prototype.can_move = function(x,y){
 	// límites del tablero y en función de ello, devuelve true o false.
 	/* EJERCICIO 7 */
 	// TU CÓDIGO AQUÍ: código para detectar colisiones. Si la posición x,y está en el diccionario grid, devolver false y true en cualquier otro caso.
-	var pos = this.grid["" + x + "," + y + ""];	
+	var pos = this.grid["" + x + "," + y + ""];
 	return pos == null;
 };
 
@@ -405,9 +404,21 @@ Tetris.prototype.key_pressed = function(e) {
 	if(key == 37) this.do_move(Tetris.DIRECTION["Left"]);
 	if(key == 39) this.do_move(Tetris.DIRECTION["Right"]);
 	if(key == 40) this.do_move(Tetris.DIRECTION["Down"]);
+	if(key == 32) this.do_space();
+
 
 
 }
+
+Tetris.prototype.do_space = function(){
+	while(this.current_shape.can_move(this.board,0,Block.BLOCK_SIZE)){
+		this.current_shape.move(0,1);
+	}
+	this.board.add_shape(this.current_shape)
+	this.current_shape = this.create_new_shape();
+	this.current_shape.draw();	
+}
+
 
 Tetris.prototype.do_move = function(direction) {
 

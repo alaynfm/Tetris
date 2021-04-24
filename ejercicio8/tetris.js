@@ -479,7 +479,34 @@ Tetris.prototype.init = function(){
 	// Pintar la pieza actual en el tablero
 	// Aclaración: (Board tiene un método para pintar)
 	this.current_shape.draw();
+	//Inicializar el contador
+	//La pieza va a vanzar cada un segundo
+	this.do_timer();
+	this.gameover = false;
+	
+}
 
+//metodo para avanzar el timer
+Tetris.prototype.do_timer = function() { 
+	var timer = setInterval(() =>{
+		if(this.current_shape.can_move(this.board,0,Block.BLOCK_SIZE)){
+			this.do_move("Down");
+		}else{
+			if(this.current_shape.px !=0){ 
+				//Para que salga una pieza nueva si ha llegado al final
+				this.board.add_shape(this.current_shape)
+				this.current_shape = this.create_new_shape();
+				this.current_shape.draw();
+				if(!this.current_shape.can_move(this.board,0,Block.BLOCK_SIZE)){
+					//Limpiar el interval y terminar el juego si no se pueden poner mas
+					clearInterval(timer);
+					if(!this.gameover)
+						alert("Game over");
+				}	
+			}
+		}
+		//console.log(this.current_shape)
+	},1000);
 }
 
 Tetris.prototype.key_pressed = function(e) { 
@@ -490,14 +517,30 @@ Tetris.prototype.key_pressed = function(e) {
 	// en la variable key se guardará el código ASCII de la tecla que
 	// ha pulsado el usuario. ¿Cuál es el código key que corresponde 
 	// a mover la pieza hacia la izquierda, la derecha, abajo o a rotarla?
-	if(key == 37) this.do_move(Tetris.DIRECTION["Left"]);
-	if(key == 39) this.do_move(Tetris.DIRECTION["Right"]);
-	if(key == 40) this.do_move(Tetris.DIRECTION["Down"]);
-	if(key == 38) this.do_rotate();
-
-
-	/* Introduce el código para realizar la rotación en el EJERCICIO 8. Es decir, al pulsar la flecha arriba, rotar la pieza actual */
+	if(key == 37) this.do_move("Left");
+	if(key == 39) this.do_move("Right");
+	if(key == 40) this.do_move("Down");
+	if(key == 38) this.do_rotate(); //Flecha hacia arriba
+	if(key == 32) this.do_space(); //espacio
 }
+
+Tetris.prototype.do_space = function(){
+	var i = 0;
+	while(this.current_shape.can_move(this.board,0,Block.BLOCK_SIZE)){
+		this.do_move("Down");
+		i++;
+	}
+	if(i == 0) {
+		alert("Game over");
+		this.gameover = true;
+	}
+	else{
+		this.board.add_shape(this.current_shape)
+		this.current_shape = this.create_new_shape();
+		this.current_shape.draw();	
+	}	
+}
+
 
 Tetris.prototype.do_move = function(direction) {
 
@@ -513,25 +556,26 @@ Tetris.prototype.do_move = function(direction) {
 	// TU CÓDIGO AQUÍ: añade la pieza actual al grid. Crea una nueva pieza y dibújala en el tablero.
 
 
-	var block = new Block(new Point(direction[0],direction[1]))
-	if(this.current_shape.can_move(this.board,block.px,block.py)){
-		this.current_shape.move(direction[0],direction[1]);
+	if(this.current_shape.can_move(this.board,Tetris.DIRECTION[direction][0],Tetris.DIRECTION[direction][1] * Block.BLOCK_SIZE)){
+		this.current_shape.move(Tetris.DIRECTION[direction][0],Tetris.DIRECTION[direction][1]);
 		this.current_shape.draw();
 	}else{
-		if(direction[1]== 1){
+		if(Tetris.DIRECTION[direction][1]== 1){
 			this.board.add_shape(this.current_shape)
 			this.current_shape = this.create_new_shape();
 			if(this.current_shape.can_move(this.board,0,0)){
 				this.current_shape.draw();
 			}else{
 				alert("Game Over");
+				this.gameover = true;
 			}
 		}
 	}
 
-	this.board.remove_complete_rows();
 	//mirar a ver si se ha cmpletado la linea entera
 	//si se ha completado eliminar y sumar a todas una posicion
+	this.board.remove_complete_rows();
+	
 }
 
 /***** EJERCICIO 8 ******/

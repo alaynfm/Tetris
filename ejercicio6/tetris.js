@@ -383,8 +383,19 @@ Tetris.prototype.key_pressed = function(e) {
 	if(key == 37) this.do_move(Tetris.DIRECTION["Left"]);
 	if(key == 39) this.do_move(Tetris.DIRECTION["Right"]);
 	if(key == 40) this.do_move(Tetris.DIRECTION["Down"]);
+	if(key == 32) this.do_space();
 
 
+
+}
+
+Tetris.prototype.do_space = function(){
+	while(this.current_shape.can_move(this.board,0,1)){
+		this.current_shape.move(0,1);
+	}
+	this.board.add_shape(this.current_shape);
+	this.current_shape = this.create_new_shape();
+	this.current_shape.draw();
 }
 
 Tetris.prototype.do_move = function(direction) {
