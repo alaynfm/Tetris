@@ -286,8 +286,13 @@ function O_Shape(center) {
    Shape.prototype.init.call(this, coords, "red");
 
 }
+
 // TU CÓDIGO AQUÍ: La clase O_Shape hereda de la clase Shape
 O_Shape.prototype = Object.create(Shape.prototype);
+
+O_Shape.prototype.can_rotate = function(board){
+	return false;
+}
 // ============ S Shape ===========================
 function S_Shape(center) {
 
@@ -426,7 +431,8 @@ Board.prototype.remove_complete_rows = function(){
 //      mover hacia abajo las filas superiores (es decir, move_down_rows(y-1) )
 
 	//console.log(this.width)
-	for(var i = 0; i<this.height; i++){//Para cada fila
+	var i = 0;
+	while( i<this.height){//Para cada fila
 		var cont = 0;
 		for(var j = 0; j< this.width; j++){//Para cada columna
 			if(this.grid["" + j * Block.BLOCK_SIZE + "," + i*Block.BLOCK_SIZE+ ""] != null) cont++;
@@ -434,6 +440,9 @@ Board.prototype.remove_complete_rows = function(){
 		//console.log("fila" + i +  " " + cont);
 		if(cont >=this.width){
 			this.move_down_rows(i);
+			i=0;
+		}else{
+			i++;
 		}
 	}
 };
@@ -538,7 +547,8 @@ Tetris.prototype.do_space = function(){
 		this.board.add_shape(this.current_shape)
 		this.current_shape = this.create_new_shape();
 		this.current_shape.draw();	
-	}	
+	}
+	this.board.remove_complete_rows();		
 }
 
 
@@ -555,8 +565,7 @@ Tetris.prototype.do_move = function(direction) {
 	// else if(direction=='Down')
 	// TU CÓDIGO AQUÍ: añade la pieza actual al grid. Crea una nueva pieza y dibújala en el tablero.
 
-
-	if(this.current_shape.can_move(this.board,Tetris.DIRECTION[direction][0],Tetris.DIRECTION[direction][1] * Block.BLOCK_SIZE)){
+	if(this.current_shape.can_move(this.board,Tetris.DIRECTION[direction][0]* Block.BLOCK_SIZE,Tetris.DIRECTION[direction][1] * Block.BLOCK_SIZE)){
 		this.current_shape.move(Tetris.DIRECTION[direction][0],Tetris.DIRECTION[direction][1]);
 		this.current_shape.draw();
 	}else{
