@@ -380,22 +380,28 @@ Tetris.prototype.key_pressed = function(e) {
 	// en la variable key se guardará el código ASCII de la tecla que
 	// ha pulsado el usuario. ¿Cuál es el código key que corresponde 
 	// a mover la pieza hacia la izquierda, la derecha, abajo o a rotarla?
-	if(key == 37) this.do_move(Tetris.DIRECTION["Left"]);
-	if(key == 39) this.do_move(Tetris.DIRECTION["Right"]);
-	if(key == 40) this.do_move(Tetris.DIRECTION["Down"]);
-	if(key == 32) this.do_space();
-
-
+	if(key == 37) this.do_move("Left");
+	if(key == 39) this.do_move("Right");
+	if(key == 40) this.do_move("Down");
+	if(key == 32) this.do_space(); //espacio
 
 }
 
 Tetris.prototype.do_space = function(){
-	while(this.current_shape.can_move(this.board,0,1)){
-		this.current_shape.move(0,1);
+	var i = 0;
+	while(this.current_shape.can_move(this.board,0,Block.BLOCK_SIZE)){
+		this.do_move("Down");
+		i++;
 	}
-	this.board.add_shape(this.current_shape);
-	this.current_shape = this.create_new_shape();
-	this.current_shape.draw();
+	if(i == 0) {
+		alert("Game over");
+		this.gameover = true;
+	}
+	else{
+		this.board.add_shape(this.current_shape)
+		this.current_shape = this.create_new_shape();
+		this.current_shape.draw();	
+	}	
 }
 
 Tetris.prototype.do_move = function(direction) {
@@ -408,20 +414,19 @@ Tetris.prototype.do_move = function(direction) {
 	// se puede mover con ese desplazamiento. En caso afirmativo, mueve la pieza. 
 
 	
-	var block = new Block(new Point(direction[0],direction[1]))
-	if(direction[1]== 0){
-		if(this.current_shape.can_move(this.board,block.px,block.py)){
-			this.current_shape.move(direction[0],direction[1]);
-			this.current_shape.draw();
-		}
+	if(this.current_shape.can_move(this.board,Tetris.DIRECTION[direction][0]*Block.BLOCK_SIZE,Tetris.DIRECTION[direction][1] * Block.BLOCK_SIZE)){
+		this.current_shape.move(Tetris.DIRECTION[direction][0],Tetris.DIRECTION[direction][1]);
+		this.current_shape.draw();
 	}else{
-		if(this.current_shape.can_move(this.board,block.px,block.py)){
-			this.current_shape.move(direction[0],direction[1]);
-			this.current_shape.draw();
-		}else{
+		if(Tetris.DIRECTION[direction][1]== 1){
 			this.board.add_shape(this.current_shape)
 			this.current_shape = this.create_new_shape();
-			this.current_shape.draw();
+			if(this.current_shape.can_move(this.board,0,0)){
+				this.current_shape.draw();
+			}else{
+				alert("Game Over");
+				this.gameover = true;
+			}
 		}
 	}
 	

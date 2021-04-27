@@ -28,21 +28,20 @@ Rectangle.prototype.init = function(p1,p2) {
 
 
 Rectangle.prototype.draw = function() {
-
 	// TU CÓDIGO AQUÍ:
 	// pinta un rectángulo del color actual en pantalla en la posición px,py, con
 	// la anchura y altura actual y una línea de anchura=lineWidth. Ten en cuenta que 
 	// en este ejemplo la variable ctx es global y que guarda el contexto (context) 
-	// para pintar en el canvas.
-
+	// para pintar en el canvas.	
 	var canvas = document.getElementById('canvas');
-  	if (canvas.getContext) {
-    var ctx = canvas.getContext('2d');
-	ctx.fillStyle = this.color;
-    ctx.fillRect(this.px ,this.py,this.width, this.height);
-	ctx.strokeRect(this.px,this.py,this.width, this.height)
-
-	}
+	if (canvas.getContext) {
+	  var ctx = canvas.getContext('2d');
+	  ctx.fillStyle = this.color;
+	  ctx.strokeStyle = 'black';
+	  ctx.lineWidth = this.lineWidth+2
+	  ctx.fillRect(this.px ,this.py,Block.BLOCK_SIZE, Block.BLOCK_SIZE);
+	  ctx.strokeRect(this.px,this.py,this.width, this.height)
+  }
 }
 
 
@@ -52,20 +51,13 @@ Rectangle.prototype.setFill = function(color) { this.color = color}
 // ============== Block ===============================
 
 function Block (pos, color) {
-
-
-	// TU CÓDIGO AQUÍ: este es el constructor de la clase Block. Recibe dos parámetros, pos y color. Pos = posición de la celda, por ejemplo, (9,19).
-	// color = color que hay que emplear para pintar el bloque.
-	// Internamente este método crea dos puntos (empleando las coordenadas del pixel)
-	// y llama al método init de la clase Rectangle, pasándole como parámetro,
-	// estos dos puntos.
-	// Sería interesante que emplearas las constantes Block.BLOCK_SIZE y Block.OUTLINE_WIDTH,
-	// para establecer la anchura del bloque y la anchura de la línea.
-
+        
 	this.BLOCK_SIZE = 30;
 	this.OUTLINE_WIDTH = 2;
 	tamano = this.BLOCK_SIZE + this.OUTLINE_WIDTH;
-	Rectangle.prototype.init.call(this,new Point(pos.x * this.BLOCK_SIZE, pos.y*this.BLOCK_SIZE), new Point((pos.x +1)* this.BLOCK_SIZE,(pos.y + 1)*this.BLOCK_SIZE));	this.color = color;
+	Rectangle.prototype.init.call(this,new Point(pos.x * 30, pos.y*30), new Point((pos.x +1)* 30,(pos.y + 1)*30));	
+	this.color = color;
+
 }
 
 

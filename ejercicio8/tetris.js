@@ -34,7 +34,7 @@ Rectangle.prototype.draw = function() {
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = 'black';
 		ctx.lineWidth = this.lineWidth+2
-		ctx.fillRect(this.px ,this.py,30, 30);
+		ctx.fillRect(this.px ,this.py,Block.BLOCK_SIZE, Block.BLOCK_SIZE);
 		ctx.strokeRect(this.px,this.py,this.width, this.height)
 	}
 }
@@ -571,16 +571,13 @@ Tetris.prototype.do_move = function(direction) {
 			}
 		}
 	}
-
 	//mirar a ver si se ha cmpletado la linea entera
 	//si se ha completado eliminar y sumar a todas una posicion
-	this.board.remove_complete_rows();
-	
+	this.board.remove_complete_rows();	
 }
 
 /***** EJERCICIO 8 ******/
 Tetris.prototype.do_rotate = function(){
-
 	// TU CÓDIGO AQUÍ: si la pieza actual se puede rotar, rótala. Recueda que Shape.can_rotate y Shape.rotate ya están programadas.	
 	if(this.current_shape.can_rotate(this.board)){
 		this.current_shape.rotate(this.board);

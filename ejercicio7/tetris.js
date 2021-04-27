@@ -34,9 +34,9 @@ Rectangle.prototype.draw = function() {
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = 'black';
 		ctx.lineWidth = this.lineWidth+2
-		ctx.fillRect(this.px ,this.py,30, 30);
+		ctx.fillRect(this.px ,this.py,Block.BLOCK_SIZE, Block.BLOCK_SIZE);
 		ctx.strokeRect(this.px,this.py,this.width, this.height)
-	}	
+	}
 }
 
 
